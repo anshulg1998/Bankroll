@@ -31,6 +31,7 @@ public class PlayerUI : MonoBehaviour
 
     void OnDisable()
     {
+        if (playerData != null)
         playerData.OnAmountUpdated -= UpdateMoneyUI;
         EventBus.Unsubscribe<OnPlayerReadyEvent>(SetTurn);
         EventBus.Unsubscribe<OnChanceEndedEvent>(SetUnTurn);
@@ -49,12 +50,19 @@ public class PlayerUI : MonoBehaviour
     
     private void SetUnTurn(OnChanceEndedEvent @event)
     {
-        if (turnImage == null)
+        if(@event.Player == null || @event.Player.PlayerData != playerData)
         {
-            Debug.LogWarning("TurnImage is not assigned in the inspector.");
-            return;
+            return; // Ignore events from other players
         }
-        turnImage.color = Color.black;
+        if (@event.Player.PlayerData == playerData)
+        {
+            if (turnImage == null)
+            {
+                Debug.LogWarning("TurnImage is not assigned in the inspector.");
+                return;
+            }
+            turnImage.color = Color.black;
+        }
     }
 
     private void SetTurn(OnPlayerReadyEvent @event)

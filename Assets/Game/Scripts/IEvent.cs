@@ -54,7 +54,14 @@ public class OnPlayerLandEvent : IEvent
 /// <summary>
 /// Event raised when a player's chance/turn ends.
 /// </summary>
-public class OnChanceEndedEvent : IEvent { }
+public class OnChanceEndedEvent : IEvent
+{
+    public Player Player { get; }
+    public OnChanceEndedEvent(Player player)
+    {
+        Player = player;
+    }
+ }
 
 /// <summary>
 /// Event raised when a property is purchased.

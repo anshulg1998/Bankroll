@@ -32,6 +32,8 @@ public class Player : MonoBehaviour
         playerData.Money = startingMoney;
         playerData.position = position;
         if (spriteRenderer != null) spriteRenderer.color = color;
+        if (playerData != null)
+            playerData.OnAmountUpdated += OnAmountUpdated;
     }
 
     /// <summary>
@@ -51,8 +53,7 @@ public class Player : MonoBehaviour
     {
         EventBus.Subscribe<PurchaseEvent>(OnPurchaseEvent);
         EventBus.Subscribe<OnPlayerStepCompleteEvent>(OnPlayerStepCompleted);
-        if (playerData != null)
-            playerData.OnAmountUpdated += OnAmountUpdated;
+        
     }
 
     private void OnDisable()
@@ -99,7 +100,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            EventBus.Publish(new OnChanceEndedEvent());
+            EventBus.Publish(new OnChanceEndedEvent(this));
         }
     }
 
@@ -107,7 +108,7 @@ public class Player : MonoBehaviour
     {
         if (playerData != null && evt.Buyer == playerData)
         {
-            playerData.Money -= evt.Amount;
+            playerData.Money = (int)Mathf.Clamp(playerData.Money - evt.Amount, 0, Mathf.Infinity);
         }
     }
 
@@ -177,7 +178,7 @@ public class JailPlayerStrategy : IPlayerStrategy
         jailSkipTurnCount--;
         if (jailSkipTurnCount > 0)
         {
-            EventBus.Publish(new OnChanceEndedEvent());
+            EventBus.Publish(new OnChanceEndedEvent(player));
         }
         else
         {
