@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: PlayerManagerConfig
   m_EditorClassIdentifier: 
   totalPlayers: 2
-  startingMoney: 1000
+  startingMoney: 1200
   playerPrefab: {fileID: 6770010394518117434, guid: 3fc3b9a0082d3de41969d0000f3134ab, type: 3}
